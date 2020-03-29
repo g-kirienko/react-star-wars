@@ -1,44 +1,47 @@
-import React, {Component} from "react";
+import React, {Component} from 'react';
+
+import ItemList from '../item-list/item-list';
+import ItemDetails from '../item-details/item-details';
+import SwapiService from '../../services/swapi-service';
+import Row from '../row';
+import ErrorBoundry from '../error-boundry';
 
 import './people-page.css';
-import PersonDetails from "../person-details";
-import ItemList from "../item-list";
-import ErrorIndicator from "../error-indicator";
 
-export default  class PeoplePage extends Component {
+export default class PeoplePage extends Component {
+
+    swapiService = new SwapiService();
 
     state = {
-        selectedPerson: null,
-        hasError: false
+        selectedPerson: 11
     };
 
-    componentDidCatch(error, errorInfo) {
-        this.setState({
-            hasError: true
-        })
-    }
-
-    onPersonSelected = (id) => {
-        this.setState({
-            selectedPerson: id
-        })
-    }
+    onPersonSelected = (selectedPerson) => {
+        this.setState({selectedPerson});
+    };
 
     render() {
-        if (this.state.hasError) {
-            return <ErrorIndicator/>
-        }
 
-        return(
-            <div className="row mb2">
-                <div className="col-md-6">
-                    <ItemList onItemSelected={this.onPersonSelected}/>
-                </div>
-                <div className="col-md-6">
-                    <PersonDetails personId={this.state.selectedPerson}/>
-                </div>
-            </div>
-        )
+        const itemList = (
+            <ItemList
+                onItemSelected={this.onPersonSelected}
+                getData={this.swapiService.getAllPeople}>
+
+                {(i) => (
+                    `${i.name} (${i.birthYear})`
+                )}
+
+            </ItemList>
+        );
+
+        const personDetails = (
+            <ErrorBoundry>
+                <ItemDetails itemId={this.state.selectedPerson}/>
+            </ErrorBoundry>
+        );
+
+        return (
+            <Row left={itemList} right={personDetails}/>
+        );
     }
-
 }

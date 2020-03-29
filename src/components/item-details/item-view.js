@@ -1,7 +1,7 @@
 import React from "react";
 import ErrorButton from "../error-button";
 
-const PersonView = ({person}) => {
+const ItemView = ({person}) => {
     const {id, name, gender, birthYear, eyeColor} = person;
     return (
         <React.Fragment>
@@ -30,4 +30,4 @@ const PersonView = ({person}) => {
     )
 };
 
-export default PersonView;
+export default ItemView;
